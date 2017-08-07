@@ -1,10 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "CloudFormation Template for creating a AutoScalingGroup.
-  01 - SecurityGroup,
-  02 - LaunchConfig,
-  03 - ASG",
+  "Description" : "CloudFormation Template for creating a AutoScalingGroup, 01 - SecurityGroup, 02 - LaunchConfig,03 - ASG",
 
   "Parameters" : {
     "VpcId" : {
@@ -142,8 +139,8 @@
         } ],
         "VpcId" : { "Ref" : "VpcId" }
       }
+     }
     },
-
     "LaunchConfig" : {
       "Type" : "AWS::AutoScaling::LaunchConfiguration",
       "Metadata" : {
@@ -151,10 +148,9 @@
         "AWS::CloudFormation::Init" : {
           "config" : {
             "packages" : {
-              "yum" : {
                 "httpd" : []
               }
-            },
+            }
           }
         }
       },
@@ -164,23 +160,9 @@
                                           { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] },
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "InstanceType" : { "Ref" : "InstanceType" },
-        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
-            "#!/bin/bash -xe\n",
-            "yum update -y aws-cfn-bootstrap\n",
 
-            "yum update -y aws-cli\n",
 
-            "sudo `which pip` install ansible\n",
-
-            "/opt/aws/bin/cfn-init -v ",
-            "         --stack ", { "Ref" : "AWS::StackName" },
-            "         --resource LaunchConfig ",
-            "         --region ", { "Ref" : "AWS::Region" }, "\n"
-        ]]}}
-      }
-    },
-
-    "Web-Asg" : {
+    "WebAsg" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
       "Properties" : {
         "VPCZoneIdentifier" : { "Ref" : "Subnets" },
@@ -188,10 +170,8 @@
         "MinSize" : "3",
         "DesiredCapacity": "1",
         "MaxSize" : "1"
-      }
-    }
-  },
-  "app-Asg" : {
+      },
+  "appAsg" : {
     "Type" : "AWS::AutoScaling::AutoScalingGroup",
     "Properties" : {
       "VPCZoneIdentifier" : { "Ref" : "Subnets" },
@@ -201,26 +181,7 @@
       "MaxSize" : "3"
     }
   }
-},
 
-  "Outputs" : {
-      "InstanceSecurityGroup": {
-        "Description" : "InstanceSecurityGroup",
-        "Value" : { "Ref" : "InstanceSecurityGroup" }
-      },
-      "LaunchConfig": {
-        "Description" : "Launch Config",
-        "Value" : { "Ref" : "LaunchConfig" }
-      },
-      "Web-Asg": {
-        "Description" : "Auto Scale Group",
-        "Value" : { "Ref" : "Web-Asg" }
-      },
-      "app-Asg": {
-        "Description" : "Auto Scale Group",
-        "Value" : { "Ref" : "app-Asg" }
-      },
-     }
-   }
- }
+}
+  }
 }
