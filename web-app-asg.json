@@ -20,7 +20,7 @@
     "KeyName": {
       "Description": "The EC2 Key Pair to allow SSH access to the instances",
       "Type": "AWS::EC2::KeyPair::KeyName",
-      "Default": "ec2-mounika",
+      "Default": "ec2-s3-rakesh",
       "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
     },
     "InstanceType": {
@@ -453,5 +453,5 @@
         "MaxSize": "3"
       }
     }
-  }
+}
 }
